@@ -20,7 +20,7 @@ function [Ubar, Ebar, Fbar] = predictor(U, E, F, R, cv, Pr, dx, dy, dt, uinf, pi
     % Compute the 2D stresses and heat flux
     tau_xx = 2.*mu.*(ddx_bwd(u,dx) - (ddx_bwd(u,dx) + ddy_central(v,dy))./3);
     tau_xy = mu.*(ddy_central(u,dy) + ddx_bwd(v,dx));
-    qdot_x = k.*ddx_bwd(T,dx);
+    qdot_x = -k.*ddx_bwd(T,dx);
     
     % Update E
     E(1,:,:) = squeeze(U(2,:,:));
@@ -33,7 +33,7 @@ function [Ubar, Ebar, Fbar] = predictor(U, E, F, R, cv, Pr, dx, dy, dt, uinf, pi
     % Compute the 2D stresses and heat flux
     tau_yy = 2.*mu.*(ddy_bwd(v,dy) - (ddx_central(u,dx) + ddy_bwd(v,dy))./3);
     tau_xy = mu.*(ddy_bwd(u,dy) + ddx_central(v,dx));
-    qdot_y = k.*ddy_bwd(T,dy);
+    qdot_y = -k.*ddy_bwd(T,dy);
     
     % Update F
     F(1,:,:) = squeeze(U(3,:,:));
