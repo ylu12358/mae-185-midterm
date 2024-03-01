@@ -50,9 +50,6 @@ T = Tinf*ones(nx,ny);
 
 p = pinf*ones(nx,ny);
 
-%% initialize conservative variables
-U = prim2cons(rho,u,v,T,cv);
-
 %% preallocate other arrays
 E = zeros(4,nx,ny);
 F = zeros(4,nx,ny);
@@ -87,6 +84,9 @@ u(1,1) = 0;
 v(1,1) = 0;
 p(1,1) = pinf;
 T(1,1) = Tinf;
+
+%% initialize conservative variables
+U = prim2cons(rho,u,v,T,cv);
 
 %% time loop
 for i = 1:nt
