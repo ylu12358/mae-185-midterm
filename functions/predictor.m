@@ -1,4 +1,5 @@
-function [Ubar, Ebar, Fbar] = predictor(U, E, F, R, cv, Pr, dx, dy, dt, uinf, pinf, Tinf)
+function [Ubar, Ebar, Fbar] = predictor(U, E, F, R, cv, Pr, dx, dy, dt,...
+    uinf, pinf, Tinf)
 
     %% Setup
     % Load functions

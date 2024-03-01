@@ -6,55 +6,58 @@ close all;
 %% load functions
 addpath('functions')
 
-%% physical and simulation parameters
+%% define physical and simulation parameters
+% air at standard conditions
+pinf = 101300;
+Tinf = 288.15;
+rho0 = 1.225;
+R = 287;
 cp = 1005;
 cv = 718;
-R = 287;
 gamma = 1.4;
-mu0 = 1.735*10^(-5);
-S1 = 110.4;
 Pr = 0.71;
 
+% physical parameters
 L = 10^(-5);
 H = 8*10^(-6);
 
+M = 4;
+
+% simulation parameters
 nx = 75;
 ny = 80;
 nt = 1500;
 t = 0;
 
-%% initialize grids using ndgrid
+%% initialize grid
 [xx,yy] = ndgrid(linspace(0,L,nx),linspace(0,H,ny));
 
-%% initialize primitive variables
-emptyM = zeros(nx,ny);
-identityM = ones(nx,ny);
-
-rho0 = 1.225;
-rho = rho0*identityM;
-
-u = emptyM;
-v = emptyM;
-
-T0 = 288.15;
-T = T0*identityM;
-
-p0 = 101300;
-p = p0*identityM;
-
-M = 4;
-
-%% preallocate other arrays
-emptyM3D = zeros(4,nx,ny);
-E = emptyM3D;
-F = emptyM3D;
-Ubar = emptyM3D;
-
-%% initial physical parameters
-a = sqrt(gamma*R*T0);
+%% initialize primitive variables w/ ICs
+% compute u_infinity
+a = sqrt(gamma*R*Tinf);
 uinf = M*a;
 
-%mu = sutherland()
+% initialize variables
+rho = rho0*ones(nx,ny);
+
+u = uinf*ones(nx,ny);
+v = zeros(nx,ny);
+
+T = Tinf*ones(nx,ny);
+
+p = pinf*ones(nx,ny);
+
+%% initialize conservative variables
+U = prim2cons(rho,u,v,T,cv);
+
+%% preallocate other arrays
+E = zeros(4,nx,ny);
+F = zeros(4,nx,ny);
+Ubar = zeros(4,nx,ny);
+
+%% compute initial physical parameters
+mu = sutherland(T);
+k = (cp/Pr)*mu;
 
 %% dx, dy, dt
 dx = diff(xx);
@@ -65,38 +68,43 @@ dt = 2.35*10^(-11);
 
 %% boundary conditions
 % wall
-u(:,0) = 0;
-v(:,0) = 0;
-T(:,0) = Tinf;
+u(:,1) = 0;
+v(:,1) = 0;
+T(:,1) = Tinf;
 % inlet and far field
-u(0,:) = uinf;
+u(1,:) = uinf;
 u(:,end) = uinf;
-v(0,:) = 0;
+v(1,:) = 0;
 v(:,end) = 0;
-p(0,:) = pinf;
+p(1,:) = pinf;
 p(:,end) = pinf;
-T(0,:) = Tinf;
+T(1,:) = Tinf;
 T(:,end) = Tinf;
 % leading edge
-u(0,0) = 0;
-v(0,0) = 0;
-p(0,0) = pinf;
-T(0,0) = Tinf;
-
-%% initial conditions
-u(:,:) = uinf;
-v(:,:) = 0;
-p(:,:) = pinf;
-T(:,:) = Tinf;
-
+u(1,1) = 0;
+v(1,1) = 0;
+p(1,1) = pinf;
+T(1,1) = Tinf;
 
 %% time loop
 for j = 1:nt
-    % U = corrector(predictor(U,E,F,...));
+    % increment t
+    t = t + dt;
 
-    % enforce BCs on correctors
-    u(:,[1 end]) = 0;
-    v(:,[1 end]) = 0;    
+    % predictor and corrector step
+    [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cv,Pr,dx,dy,dt,uinf,pinf,Tinf);
+    U = corrector(U,Ubar,Ebar,Fbar,Pr,dx,dy,dt,R,cv,cp,uinf,pinf,Tinf);
+    
+    % extract conservative variables for plot
+    [rho,u,v,T,p,e,~] = cons2prim(U,R,cv);
+
+    varsplot = zeros(6,nx,ny);
+    varsplot(1,:,:) = rho;
+    varsplot(2,:,:) = u;
+    varsplot(3,:,:) = v;
+    varsplot(4,:,:) = e;
+    varsplot(5,:,:) = p;
+    varsplot(6,:,:) = T;
 
     % draw graph
     figure(1);
@@ -132,7 +140,4 @@ for j = 1:nt
 
     % update figure
     drawnow;
-    
-    % increment t
-    t = t + dt;
 end
