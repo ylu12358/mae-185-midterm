@@ -61,41 +61,8 @@ function [U] = corrector(U, Ubar, Ebar, Fbar, Pr, dx, dy, dt, R, cv, cp,...
     [rho,u,v,T,p,~,~] = cons2prim(U,R,cv);
 
     %% Enforce BCs on primitive variables 
-    % Also enforce BCs on rho due to dependence on p and T 
+    [u,v,~,T,rho] = enforceBCs(u,v,p,T,rho,pinf,Tinf,uinf,R);
 
-    % Inlet (left)
-    u(1,:) = uinf;
-    v(1,:) = 0;
-    T(1,:) = Tinf;
-    p(1,:) = pinf;
-    rho(1,:) = p(1,:)./(R.*T(1,:));
-
-    % Outlet (right)
-    u(end,:) = 2*u(end-1,:)-u(end-2,:);
-    v(end,:) = 2*v(end-1,:)-v(end-2,:);
-    T(end,:) = 2*T(end-1,:)-T(end-2,:);
-    p(end,:) = 2*p(end-1,:)-p(end-2,:);
-    rho(end,:) = p(end,:)./(R.*T(end,:));
-    
-    % Wall (bottom)
-    u(:,1) = 0;
-    v(:,1) = 0;
-    T(:,1) = Tinf;
-    p(:,1) = 2*p(:,2)-p(:,3); % 2nd order extrapolation
-    rho(:,1) = p(:,1)./(R.*T(:,1));
-    
-    % Far-field (top)
-    u(:,end) = uinf;
-    v(:,end) = 0;
-    T(:,end) = Tinf;
-    p(:,end) = pinf;
-    rho(:,end) = p(:,end)./(R.*T(:,end));
-
-    % Leading edge (bottom left point) 
-    u(1,1) = 0;
-    v(1,1) = 0;
-    p(1,1) = pinf;
-    T(1,1) = Tinf;
 
     %% Update U
 

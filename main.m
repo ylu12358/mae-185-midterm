@@ -17,7 +17,7 @@ rho0 = 1.225;
 R = 287;
 cp = 1005;
 cv = 718;
-gamma = 1.4;
+gamma = cp/cv;
 Pr = 0.71;
 
 % physical parameters
@@ -65,25 +65,8 @@ dy = diff(yy');
 dy = dy(1);
 dt = 2.35*10^(-11);
 
-%% boundary conditions
-% wall
-u(:,1) = 0;
-v(:,1) = 0;
-T(:,1) = Tinf;
-% inlet and far field
-u(1,:) = uinf;
-u(:,end) = uinf;
-v(1,:) = 0;
-v(:,end) = 0;
-p(1,:) = pinf;
-p(:,end) = pinf;
-T(1,:) = Tinf;
-T(:,end) = Tinf;
-% leading edge
-u(1,1) = 0;
-v(1,1) = 0;
-p(1,1) = pinf;
-T(1,1) = Tinf;
+%% Enforce BCs on primitive variables
+[u,v,p,T,rho] = enforceBCs(u,v,p,T,rho,pinf,Tinf,uinf,R);
 
 %% initialize conservative variables
 U = prim2cons(rho,u,v,T,cv);
