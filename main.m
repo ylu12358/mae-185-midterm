@@ -87,7 +87,7 @@ p(1,1) = pinf;
 T(1,1) = Tinf;
 
 %% time loop
-for j = 1:nt
+for i = 1:nt
     % increment t
     t = t + dt;
 
@@ -110,21 +110,22 @@ for j = 1:nt
     figure(1);
     f1.Position = [100,100,3400,600];
 
-    cblabels = {'\rho [kg/m^3]',
-        'u [m/s]',
-        'v [m/s]',
-        'e [J/kg = m^3/s^3]',
-        'p [Pa = kg/m/s^2]',
+    cblabels = {'\rho [kg/m^3]',...
+        'u [m/s]',...
+        'v [m/s]',...
+        'e [J/kg = m^3/s^3]',...
+        'p [Pa = kg/m/s^2]',...
         'T [K]'};
     
-    subtitles = {'density',
-        'velocity - x',
-        'velocity - y',
-        'specific internal energy',
-        'pressure',
+    subtitles = {'density',...
+        'velocity - x',...
+        'velocity - y',...
+        'specific internal energy',...
+        'pressure',...
         'temperature'};
 
     sgtitle(['MacCormack for Compressible Navier-Stokes: t = ' num2str(t)]);
+
     for j = 1:size(varsplot,1)
         subplot(2,3,j);
         pcolor(xx,yy,squeeze(varsplot(j,:,:)));
