@@ -45,9 +45,10 @@ p = p0*identityM;
 M = 4;
 
 %% preallocate other arrays
-E = emptyM;
-F = emptyM;
-Ubar = emptyM;
+emptyM3D = zeros(4,nx,ny);
+E = emptyM3D;
+F = emptyM3D;
+Ubar = emptyM3D;
 
 %% initial physical parameters
 a = sqrt(gamma*R*T0);
