@@ -62,6 +62,15 @@ dy = diff(yy');
 dy = dy(1);
 dt = 2.35*10^(-11);
 
+$%
+
+%% initial conditions
+u(:,:) = uinf;
+v(:,:) = 0;
+p(:,:) = pinf;
+T(:,:) = Tinf;
+
+
 %% time loop
 for j = 1:nt
     % U = corrector(predictor(U,E,F,...));
@@ -74,8 +83,20 @@ for j = 1:nt
     figure(1);
     f1.Position = [100,100,3400,600];
 
-
+    cblabels = {'\rho [kg/m^3]',
+        'u [m/s]',
+        'v [m/s]',
+        'e [J/kg = m^3/s^3]',
+        'p [Pa = kg/m/s^2]',
+        'T [K]'};
     
+    subtitles = {'density',
+        'velocity - x',
+        'velocity - y',
+        'specific internal energy',
+        'pressure',
+        'temperature'};
+
     sgtitle(['MacCormack for Compressible Navier-Stokes: t = ' num2str(t)]);
     for j = 1:size(varsplot,1)
         subplot(2,3,j);

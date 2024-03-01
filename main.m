@@ -62,6 +62,33 @@ dy = diff(yy');
 dy = dy(1);
 dt = 2.35*10^(-11);
 
+%% boundary conditions
+% wall
+u(:,0) = 0;
+v(:,0) = 0;
+T(:,0) = Tinf;
+% inlet and far field
+u(0,:) = uinf;
+u(:,end) = uinf;
+v(0,:) = 0;
+v(:,end) = 0;
+p(0,:) = pinf;
+p(:,end) = pinf;
+T(0,:) = Tinf;
+T(:,end) = Tinf;
+% leading edge
+u(0,0) = 0;
+v(0,0) = 0;
+p(0,0) = pinf;
+T(0,0) = Tinf;
+
+%% initial conditions
+u(:,:) = uinf;
+v(:,:) = 0;
+p(:,:) = pinf;
+T(:,:) = Tinf;
+
+
 %% time loop
 for j = 1:nt
     % U = corrector(predictor(U,E,F,...));
