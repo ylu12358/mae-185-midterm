@@ -3,6 +3,9 @@ clc;
 clear all;
 close all;
 
+%% begin timer
+tic
+
 %% load functions
 addpath('functions')
 
@@ -57,7 +60,6 @@ Ubar = zeros(4,nx,ny);
 
 %% compute initial physical parameters
 mu = sutherland(T);
-k = (cp/Pr)*mu;
 
 %% dx, dy, dt
 dx = diff(xx);
@@ -139,6 +141,11 @@ for i = 1:nt
         set(gca,'FontSize',14);
     end
 
-    % update figure
-    drawnow;
+    % update figure every 20 iterations
+    if mod(i,20) == 0
+        drawnow;
+    end
 end
+
+%% end timer
+toc

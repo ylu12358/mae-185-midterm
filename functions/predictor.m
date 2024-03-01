@@ -2,15 +2,13 @@ function [Ubar, Ebar, Fbar] = predictor(U, E, F, R, cv, Pr, dx, dy, dt,...
     uinf, pinf, Tinf)
 
     %% Setup
-    % Load functions
-    addpath('functions');
     
     % Extract primitive variables from conservative
     [rho,u,v,T,p,~,Et] = cons2prim(U,R,cv);
     
     % Update all necessary physical parameters
     mu = sutherland(T);
-    k = mu.*(R+cv)./Pr;
+    k = mu.*(R+cv)/Pr;
 
     % Preallocate space for Ubar
     Ubar = U;
@@ -19,7 +17,7 @@ function [Ubar, Ebar, Fbar] = predictor(U, E, F, R, cv, Pr, dx, dy, dt,...
     % Compute partial derivatives of primitive variables needed to assemble flux array E
 
     % Compute the 2D stresses and heat flux
-    tau_xx = 2.*mu.*(ddx_bwd(u,dx) - (ddx_bwd(u,dx) + ddy_central(v,dy))./3);
+    tau_xx = 2*mu.*(ddx_bwd(u,dx) - (ddx_bwd(u,dx) + ddy_central(v,dy))./3);
     tau_xy = mu.*(ddy_central(u,dy) + ddx_bwd(v,dx));
     qdot_x = -k.*ddx_bwd(T,dx);
     
@@ -84,6 +82,9 @@ function [Ubar, Ebar, Fbar] = predictor(U, E, F, R, cv, Pr, dx, dy, dt,...
 
     % Bottom left corner point
     u(1,1) = 0;
+    v(1,1) = 0;
+    p(1,1) = pinf;
+    T(1,1) = Tinf;
 
     % Update Ubar, update Ebar and Fbar for export
     Ubar = prim2cons(rho,u,v,T,cv);

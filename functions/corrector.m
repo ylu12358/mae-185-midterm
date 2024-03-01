@@ -1,10 +1,12 @@
 function [U] = corrector(U, Ubar, Ebar, Fbar, Pr, dx, dy, dt, R, cv, cp,...
     uinf, pinf, Tinf)
-    
+
+    %% Setup
+
     % Extract primitive variables at predictor level from Ubar
     [rho,u,v,T,p,~,Et] = cons2prim(Ubar,R,cv);
 
-    %% Update all necessary physical parameters
+    % Update all necessary physical parameters
     mu = sutherland(T);
     k = (cp/Pr)*mu;
 
@@ -91,6 +93,9 @@ function [U] = corrector(U, Ubar, Ebar, Fbar, Pr, dx, dy, dt, R, cv, cp,...
 
     % Leading edge (bottom left point) 
     u(1,1) = 0;
+    v(1,1) = 0;
+    p(1,1) = pinf;
+    T(1,1) = Tinf;
 
     %% Update U
 
