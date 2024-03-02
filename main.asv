@@ -32,6 +32,8 @@ ny = 80;
 nt = 1500;
 figureskipped = 50; % only plots iterations at increments of this value
 t = 0;
+plotschlieren = false;
+plotadiabaticwall = false;
 
 %% initialize grid
 [xx,yy] = ndgrid(linspace(0,L,nx),linspace(0,H,ny));
@@ -72,7 +74,7 @@ U = prim2cons(rho,u,v,T,cv);
 
 %% initialize graph window and parameters
 f1 = figure(1);
-f1.Position = [100,100,1200,900];
+f1.Position = [100,100,1400,1000];
 
 varsplot = zeros(6,nx,ny);
 
@@ -86,9 +88,20 @@ cblabels = {'\rho [kg/m^3]',...
 subtitles = {'density',...
     'velocity - x',...
     'velocity - y',...
-    'specific internal energy',...
+    'spec. int. energy',...
     'pressure',...
     'temperature'};
+
+if plotschlieren == true
+    cblabels{1} = ' ';
+    subtitles{1} = 'schlieren';
+end
+
+if plotadiabaticwall == true
+    cblabels{5,6} = ' ';
+    subtitles{5} = 'pressure; adiabatic wall';
+    subtitles{6} = 'temperature; adiabatic wall';
+end
 
 convergencevar = rho(40,20);
 convergencet = t;
@@ -109,10 +122,16 @@ for iter = 1:nt
         [rho,u,v,T,p,e,~] = cons2prim(U,R,cv);
     
         varsplot(1,:,:) = rho;
+        if plotschlieren == true
+            varsplot(1,:,:) = schlieren(rho,dx,dy);
+        end
         varsplot(2,:,:) = u;
         varsplot(3,:,:) = v;
         varsplot(4,:,:) = e;
         varsplot(5,:,:) = p;
+        if plotadiabaticwall == true
+            varsplot(5,:,:) = 
+        end
         varsplot(6,:,:) = T;
     
         % overall title
@@ -120,15 +139,21 @@ for iter = 1:nt
     
         % pcolor
         for j = 1:size(varsplot,1)
-            subplot(3,3,j);
+            ax = subplot(3,3,j);
             pcolor(xx,yy,squeeze(varsplot(j,:,:)));
             shading interp;
             cb(j) = colorbar;
             ylabel(cb(j),cblabels(j));
+            if j == 1 && plotschlieren == true % schlieren
+                colormap(ax,"gray");
+                clim([0 1]);
+            else
+                colormap(ax,"turbo");
+            end
             axis equal tight;
             title(subtitles(j));
             xlabel('x'); ylabel('y');
-            set(gca,'FontSize',14);
+            set(gca,'FontSize',12);
         end
 
         % convergence
@@ -138,7 +163,8 @@ for iter = 1:nt
         plot(convergencet,convergencevar,'r-','LineWidth',2);
         hold on; box on; grid on;
         xlim([0 t]);
-        title(['convergence of density at x = ' num2str(40*dx) ', y = ' num2str(20*dy)]);
+        title(['convergence of density at x = ' num2str(40*dx) ...
+            ', y = ' num2str(20*dy)]);
         xlabel('t'); ylabel('\rho');
         set(gca,'FontSize',14);
 

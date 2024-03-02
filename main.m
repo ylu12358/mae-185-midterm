@@ -32,7 +32,10 @@ ny = 80;
 nt = 1500;
 figureskipped = 50; % only plots iterations at increments of this value
 t = 0;
+
 plotschlieren = false;
+plotadiabaticwall = false;
+bc = "isothermal";
 
 %% initialize grid
 [xx,yy] = ndgrid(linspace(0,L,nx),linspace(0,H,ny));
@@ -78,7 +81,6 @@ f1.Position = [100,100,1400,1000];
 varsplot = zeros(6,nx,ny);
 
 cblabels = {'\rho [kg/m^3]',...
-    ' ',...
     'u [m/s]',...
     'v [m/s]',...
     'e [J/kg = m^3/s^3]',...
@@ -95,6 +97,13 @@ subtitles = {'density',...
 if plotschlieren == true
     cblabels{1} = ' ';
     subtitles{1} = 'schlieren';
+end
+
+if plotadiabaticwall == true
+    
+    cblabels{5,6} = ' ';
+    subtitles{5} = 'pressure; adiabatic wall';
+    subtitles{6} = 'temperature; adiabatic wall';
 end
 
 convergencevar = rho(40,20);
@@ -124,6 +133,10 @@ for iter = 1:nt
         varsplot(4,:,:) = e;
         varsplot(5,:,:) = p;
         varsplot(6,:,:) = T;
+        if plotadiabaticwall == true
+            varsplot(5,:,:) = p./pinf;
+            varsplot(6,:,:) = T./Tinf;
+        end
     
         % overall title
         sgtitle(['MacCormack for Compressible Navier-Stokes: t = ' num2str(t) ', n = ' num2str(iter)]);
@@ -138,6 +151,8 @@ for iter = 1:nt
             if j == 1 && plotschlieren == true % schlieren
                 colormap(ax,"gray");
                 clim([0 1]);
+            elseif (j == 5 || j == 6) && plotadiabaticwall == true % adiabatic wall
+                
             else
                 colormap(ax,"turbo");
             end

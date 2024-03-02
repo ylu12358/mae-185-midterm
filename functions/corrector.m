@@ -1,4 +1,4 @@
-function [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf)
+function [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf,bc)
 %CORRECTOR Executes corrector step of MacCormack method.
 %   [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf)
 
@@ -11,7 +11,21 @@ function [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf)
     mu = sutherland(T);
     k = (cp/Pr)*mu;
 
+    % Create temperature gradient array 
+    dTdy = ddy_fwd(T,dy);
     %% Compute partial derivatives of primitive variables needed to assemble Ebar and Fbar
+
+    % set default value for 'bc'
+    if nargin<3
+        
+        bc = 'isothermal'; 
+   
+    elseif bc == "adiabatic" 
+        
+        % Enforce adiabatic wall BC on temperature gradient array 
+        dTdy(:,1) = 0;
+    
+    end
 
     % Compute the 2D stresses and heat flux for Ebar
     tau_xx = 2*mu.*(ddx_fwd(u,dx) - (ddx_fwd(u,dx) + ddy_central(v,dy))/3);
@@ -27,7 +41,7 @@ function [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf)
     % Compute the 2D stresses and heat flux for Fbar 
     tau_yy = 2*mu.*(ddy_fwd(v,dy) - (ddx_central(u,dx) + ddy_fwd(v,dy))/3);
     tau_xy = mu.*(ddy_fwd(u,dy) + ddx_central(v,dx));
-    qdot_y = -k.*ddy_fwd(T,dy);
+    qdot_y = -k.*dTdy;
     
     % Update Fbar
     Fbar(1,:,:) = squeeze(Ubar(3,:,:));

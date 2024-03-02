@@ -1,4 +1,4 @@
-function [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf)
+function [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf,bc)
 %PREDICTOR Executes predictor step of MacCormack method.
 %   [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf)
 
@@ -14,7 +14,23 @@ function [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf
     % Preallocate space for Ubar
     Ubar = U;
     
+    % Create temperature gradient array 
+    dTdy = ddy_bwd(T,dy);
+
+    
     %% Compute partial derivatives of primitive variables needed to assemble E and F
+    
+    % set default value for 'bc'
+    if nargin<3
+        
+        bc = 'isothermal'; 
+   
+    elseif bc == "adiabatic" 
+        
+        % Enforce adiabatic wall BC on temperature gradient array 
+        dTdy(:,1) = 0;
+    
+    end
 
     % Compute the 2D stresses and heat flux for E
     tau_xx = 2*mu.*(ddx_bwd(u,dx) - (ddx_bwd(u,dx) + ddy_central(v,dy))/3);
@@ -30,7 +46,7 @@ function [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf
     % Compute the 2D stresses and heat flux for F
     tau_yy = 2*mu.*(ddy_bwd(v,dy) - (ddx_central(u,dx) + ddy_bwd(v,dy))/3);
     tau_xy = mu.*(ddy_bwd(u,dy) + ddx_central(v,dx));
-    qdot_y = -k.*ddy_bwd(T,dy);
+    qdot_y = -k.*dTdy;
     
     % Update F
     F(1,:,:) = squeeze(U(3,:,:));
