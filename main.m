@@ -32,6 +32,7 @@ ny = 80;
 nt = 1500;
 figureskipped = 50; % only plots iterations at increments of this value
 t = 0;
+plotschlieren = false;
 
 %% initialize grid
 [xx,yy] = ndgrid(linspace(0,L,nx),linspace(0,H,ny));
@@ -72,11 +73,12 @@ U = prim2cons(rho,u,v,T,cv);
 
 %% initialize graph window and parameters
 f1 = figure(1);
-f1.Position = [100,100,1200,900];
+f1.Position = [100,100,1400,1000];
 
 varsplot = zeros(6,nx,ny);
 
 cblabels = {'\rho [kg/m^3]',...
+    ' ',...
     'u [m/s]',...
     'v [m/s]',...
     'e [J/kg = m^3/s^3]',...
@@ -86,9 +88,14 @@ cblabels = {'\rho [kg/m^3]',...
 subtitles = {'density',...
     'velocity - x',...
     'velocity - y',...
-    'specific internal energy',...
+    'spec. int. energy',...
     'pressure',...
     'temperature'};
+
+if plotschlieren == true
+    cblabels{1} = ' ';
+    subtitles{1} = 'schlieren';
+end
 
 convergencevar = rho(40,20);
 convergencet = t;
@@ -109,6 +116,9 @@ for iter = 1:nt
         [rho,u,v,T,p,e,~] = cons2prim(U,R,cv);
     
         varsplot(1,:,:) = rho;
+        if plotschlieren == true
+            varsplot(1,:,:) = schlieren(rho,dx,dy);
+        end
         varsplot(2,:,:) = u;
         varsplot(3,:,:) = v;
         varsplot(4,:,:) = e;
@@ -120,15 +130,21 @@ for iter = 1:nt
     
         % pcolor
         for j = 1:size(varsplot,1)
-            subplot(3,3,j);
+            ax = subplot(3,3,j);
             pcolor(xx,yy,squeeze(varsplot(j,:,:)));
             shading interp;
             cb(j) = colorbar;
             ylabel(cb(j),cblabels(j));
+            if j == 1 && plotschlieren == true % schlieren
+                colormap(ax,"gray");
+                clim([0 1]);
+            else
+                colormap(ax,"turbo");
+            end
             axis equal tight;
             title(subtitles(j));
             xlabel('x'); ylabel('y');
-            set(gca,'FontSize',14);
+            set(gca,'FontSize',12);
         end
 
         % convergence
