@@ -58,12 +58,13 @@ Ubar = zeros(4,nx,ny);
 %% compute initial physical parameters
 mu = sutherland(T);
 
-%% dx, dy, dt
+%% dx, dy, dt, safety factor sf
 dx = diff(xx);
 dx = dx(1);
 dy = diff(yy');
 dy = dy(1);
-dt = 2.35*10^(-11);
+sf = 1.2;
+dt = 2.35*10^(-11)/sf;
 
 %% initialize conservative variables
 U = prim2cons(rho,u,v,T,cv);
