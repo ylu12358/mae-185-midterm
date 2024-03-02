@@ -13,14 +13,10 @@ function [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf,bc)
 
     % Create temperature gradient array 
     dTdy = ddy_fwd(T,dy);
+
     %% Compute partial derivatives of primitive variables needed to assemble Ebar and Fbar
 
-    % set default value for 'bc'
-    if nargin<3
-        
-        bc = 'isothermal'; 
-   
-    elseif bc == "adiabatic" 
+    if bc == "adiabatic" 
         
         % Enforce adiabatic wall BC on temperature gradient array 
         dTdy(:,1) = 0;
@@ -63,7 +59,7 @@ function [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf,bc)
     [rho,u,v,T,p,~,~] = cons2prim(U,R,cv);
 
     %% Enforce BCs on primitive variables 
-    [u,v,~,T,rho] = enforceBC(u,v,p,T,rho,pinf,Tinf,uinf,R);
+    [u,v,~,T,rho] = enforceBC(u,v,p,T,rho,pinf,Tinf,uinf,R,bc);
 
 
     %% Update U

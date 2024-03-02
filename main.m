@@ -100,7 +100,7 @@ if plotschlieren == true
 end
 
 if plotadiabaticwall == true
-    
+    bc = "adiabatic";
     cblabels{5,6} = ' ';
     subtitles{5} = 'pressure; adiabatic wall';
     subtitles{6} = 'temperature; adiabatic wall';
@@ -115,8 +115,8 @@ for iter = 1:nt
     t = t + dt;
 
     % predictor and corrector step
-    [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf);
-    U = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf);
+    [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf,bc);
+    U = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf,bc);
 
     % update figure every few iterations
     if mod(iter,figureskipped) == 0 || iter == nt
@@ -151,8 +151,6 @@ for iter = 1:nt
             if j == 1 && plotschlieren == true % schlieren
                 colormap(ax,"gray");
                 clim([0 1]);
-            elseif (j == 5 || j == 6) && plotadiabaticwall == true % adiabatic wall
-                
             else
                 colormap(ax,"turbo");
             end

@@ -6,7 +6,6 @@ function [u,v,p,T,rho] = enforceBC(u,v,p,T,rho,pinf,Tinf,uinf,R,bc)
 
     % If statement for temperature BCs
     if bc == "isothermal"
-    
     end
 
 
