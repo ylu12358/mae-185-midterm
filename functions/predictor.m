@@ -21,11 +21,12 @@ function [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf
     %% Compute partial derivatives of primitive variables needed to assemble E and F
     
     % set default value for 'bc'
-    if nargin<3
+    if nargin<15
         
         bc = 'isothermal'; 
-   
-    elseif bc == "adiabatic" 
+    
+    end
+    if bc == "adiabatic" 
         
         % Enforce adiabatic wall BC on temperature gradient array 
         dTdy(:,1) = 0;
