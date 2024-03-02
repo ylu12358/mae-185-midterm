@@ -99,9 +99,11 @@ if plotschlieren == true
     subtitles{1} = 'schlieren';
 end
 
-if plotadiabaticwall == true   
-    subtitles{5} = 'pressure norm.';
-    subtitles{6} = 'temperature norm.';
+if plotadiabaticwall == true
+    
+    cblabels{5,6} = ' ';
+    subtitles{5} = 'pressure; adiabatic wall';
+    subtitles{6} = 'temperature; adiabatic wall';
 end
 
 convergencevar = rho(40,20);

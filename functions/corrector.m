@@ -16,10 +16,11 @@ function [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf,bc)
     %% Compute partial derivatives of primitive variables needed to assemble Ebar and Fbar
 
     % set default value for 'bc'
-    if nargin<15      
+    if nargin<3
+        
         bc = 'isothermal'; 
-    end
-    if bc == "adiabatic" 
+   
+    elseif bc == "adiabatic" 
         
         % Enforce adiabatic wall BC on temperature gradient array 
         dTdy(:,1) = 0;
