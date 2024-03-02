@@ -92,37 +92,39 @@ for i = 1:nt
     figure(1);
     f1.Position = [100,100,3400,600];
 
-    cblabels = {'\rho [kg/m^3]',...
-        'u [m/s]',...
-        'v [m/s]',...
-        'e [J/kg = m^3/s^3]',...
-        'p [Pa = kg/m/s^2]',...
-        'T [K]'};
+
+    % update figure every 200 iterations
+    if mod(i,150) == 0
+            
+        cblabels = {'\rho [kg/m^3]',...
+            'u [m/s]',...
+            'v [m/s]',...
+            'e [J/kg = m^3/s^3]',...
+            'p [Pa = kg/m/s^2]',...
+            'T [K]'};
+        
+        subtitles = {'density',...
+            'velocity - x',...
+            'velocity - y',...
+            'specific internal energy',...
+            'pressure',...
+            'temperature'};
     
-    subtitles = {'density',...
-        'velocity - x',...
-        'velocity - y',...
-        'specific internal energy',...
-        'pressure',...
-        'temperature'};
+        sgtitle(['MacCormack for Compressible Navier-Stokes: t = ' num2str(t)]);
+    
+        for j = 1:size(varsplot,1)
+            subplot(2,3,j);
+            pcolor(xx,yy,squeeze(varsplot(j,:,:)));
+            shading interp;
+            cb(j) = colorbar;
+            ylabel(cb(j),cblabels(j));
+            hold on;
+            axis equal tight;
+            title(subtitles(j));
+            xlabel('x'); ylabel('y');
+            set(gca,'FontSize',14);
+        end
 
-    sgtitle(['MacCormack for Compressible Navier-Stokes: t = ' num2str(t)]);
-
-    for j = 1:size(varsplot,1)
-        subplot(2,3,j);
-        pcolor(xx,yy,squeeze(varsplot(j,:,:)));
-        shading interp;
-        cb(j) = colorbar;
-        ylabel(cb(j),cblabels(j));
-        hold on;
-        axis equal tight;
-        title(subtitles(j));
-        xlabel('x'); ylabel('y');
-        set(gca,'FontSize',14);
-    end
-
-    % update figure every 20 iterations
-    if mod(i,20) == 0
         drawnow;
     end
 end
