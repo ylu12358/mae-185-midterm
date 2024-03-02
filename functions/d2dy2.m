@@ -1,5 +1,6 @@
-% Second-order second central difference function in y
 function d2fdy2 = d2dy2(f,dy,bc)
+%D2DY2 Computes second-order second central difference function in y
+%   d2fdy2 = d2dy2(f,dy,bc)
     
     % set default value for 'bc'
     if nargin<3, bc = 'one-sided'; end

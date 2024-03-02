@@ -1,5 +1,6 @@
-% First-order forward difference difference function in y
 function dfdy = ddy_fwd(f,dy,bc)
+%DDY_FWD Computes first-order forward difference function in y
+%   dfdy = ddy_fwd(f,dy,bc)
 
     % set default value for 'bc'
     if nargin<3, bc = 'one-sided'; end

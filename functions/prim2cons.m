@@ -1,5 +1,5 @@
 function [U] = prim2cons(rho,u,v,T,cv)
-%CONS2PRIM Convert primitive vars to conservative.
+%PRIM2CONS Convert primitive vars to conservative.
 %   [U] = prim2cons(rho,u,v,T,cv)
 
     % Get values of conservative variables

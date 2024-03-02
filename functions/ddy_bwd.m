@@ -1,5 +1,6 @@
-% First-order backward difference difference function in y
 function dfdy = ddy_bwd(f,dy,bc)
+%DDY_BWD Computes first-order backward difference function in y
+%   dfdy = ddy_bwd(f,dy,bc)
 
     % set default value for 'bc'
     if nargin<3, bc = 'one-sided'; end

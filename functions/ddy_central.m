@@ -1,4 +1,6 @@
 function dfdy = ddy_central(f,dy)
+%DDY_CENTRAL Computes second-order central first difference function in y
+%   dfdy = ddy_central(f,dy)
     
     % determine field size
     [nx,ny]     = size(f);

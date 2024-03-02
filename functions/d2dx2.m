@@ -1,5 +1,6 @@
-% Second-order second central difference function in x
 function d2fdx2 = d2dx2(f,dx,bc)
+%D2DX2 Computes second-order second central difference function in x
+%   d2fdx2 = d2dx2(f,dx,bc)
     
     % set default value for 'bc'
     if nargin<3, bc = 'one-sided'; end

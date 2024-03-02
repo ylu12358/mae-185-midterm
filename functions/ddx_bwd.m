@@ -1,5 +1,6 @@
-% First-order backward difference difference function in x
 function dfdx = ddx_bwd(f,dx,bc)
+%DDX_BWD Computes first-order backward difference function in x
+%   dfdx = ddx_bwd(f,dx,bc)
 
     % set default value for 'bc'
     if nargin<3, bc = 'one-sided'; end

@@ -1,5 +1,6 @@
-% First-order forward difference difference function in x
 function dfdx = ddx_fwd(f,dx,bc)
+%DDX_FWD Computes first-order forward difference function in x
+%   dfdx = ddx_fwd(f,dx,bc)
 
     % set default value for 'bc'
     if nargin<3, bc = 'one-sided'; end

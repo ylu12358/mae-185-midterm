@@ -1,5 +1,5 @@
 function [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf)
-%CORRECTOR Executes predictor step of MacCormack method.
+%PREDICTOR Executes predictor step of MacCormack method.
 %   [Ubar, Ebar, Fbar] = predictor(U,E,F,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf)
 
     %% Setup
