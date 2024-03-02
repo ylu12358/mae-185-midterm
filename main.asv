@@ -138,8 +138,7 @@ for iter = 1:nt
         plot(convergencet,convergencevar,'r-','LineWidth',2);
         hold on; box on; grid on;
         xlim([0 t]);
-        title(['convergence of density at x = ' num2str(40*dx) ...
-            ', y = ' num2str(20*dy)]);
+        title(['convergence of density at x = ' num2str(40*dx) ', y = ' num2str(20*dy)]);
         xlabel('t'); ylabel('\rho');
         set(gca,'FontSize',14);
 
