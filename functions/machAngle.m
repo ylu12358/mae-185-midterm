@@ -5,7 +5,7 @@ function theta = machAngle(field, fieldname, xx, yy, dx, dy, M)
     % Tresholds distinct for first and last points as flow physics are more
     % dynamic near leading edge
     threshold = 0.01;
-    end_threshold = 0.05;
+    end_threshold = 0.03;
     pt1 = 10;
 
     % Compute the percentage difference for first to last row
@@ -31,7 +31,8 @@ function theta = machAngle(field, fieldname, xx, yy, dx, dy, M)
     % Set labels and title
     xlabel('x'); 
     ylabel('y');
-    title(['Mach angle = ', num2str(theta), 'º verification using ', ...
-        fieldname, ' for Ma = ', num2str(M), ' (arcsin(1/Ma) = ', ...
-        num2str(asin(1/M)*180/pi), 'º)'])
+    title(['\theta check using ', fieldname, ' for Ma = ', num2str(M), ...
+        ' (asin(1/Ma) = ', num2str(round(asin(1/M)*180/pi)), 'º)'])
+    legend('Flow Field', ['Estimated Shock Path, \theta = ', ...
+        num2str(round(theta)), 'º'])
 end

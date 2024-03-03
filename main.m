@@ -33,11 +33,10 @@ nt = 1500;
 figureskipped = 50; % only plots iterations at increments of this value
 t = 0;
 
-% Part two plot toggles
+%% Specify part two problem toggles
 plotschlieren = false;
 plotnormalized = true;
 plotMachAngle = false;
-
 bc = "adiabatic";
 
 %% initialize grid
@@ -216,13 +215,11 @@ for iter = 1:nt
 
         drawnow;
     end
-
 end
 
 if plotMachAngle == true
-    machAngle(p, 'Pressure', xx, yy, dx, dy, M);
+    machAngle(p, 'pressure', xx, yy, dx, dy, M);
 end
-
 
 %% end timer
 toc
