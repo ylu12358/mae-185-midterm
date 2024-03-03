@@ -34,9 +34,10 @@ figureskipped = 50; % only plots iterations at increments of this value
 t = 0;
 
 plotschlieren = false;
-plotadiabaticwall = true;
+plotnormalized = true;
+plotMachAngle = false;
 
-bc = "isothermal";
+bc = "adiabatic";
 
 %% initialize grid
 [xx,yy] = ndgrid(linspace(0,L,nx),linspace(0,H,ny));
@@ -96,7 +97,7 @@ subtitles = {'density',...
     'pressure',...
     'temperature'};
 
-if plotadiabaticwall == true
+if plotnormalized == true
     cblabels = {'T/T_{inf}',...
         'T/T_{inf}',...
         'T/T_{inf}',...
@@ -104,13 +105,13 @@ if plotadiabaticwall == true
         'p/p_{inf}',...
         'p/p_{inf}'};
     
-    subtitles = {'Norm. T @ x/L = 0.25',...
+    subtitles = {'Temperature T @ x/L = 0.25',...
         'Temperature T @ x/L = 0.5',...
         'Temperature T @ x/L = 0.75',...
-        'Norm. p @ x/L = 0.25',...
-        'Norm. p @ x/L = 0.5',...
-        'Norm. p @ x/L = 0.75'};
-    bc = "adiabatic";
+        'Pressure p @ x/L = 0.25',...
+        'Pressure p @ x/L = 0.5',...
+        'Pressure p @ x/L = 0.75'};
+    
 end
 
 
@@ -137,7 +138,7 @@ for iter = 1:nt
         % extract conservative variables for plot
         [rho,u,v,T,p,e,~] = cons2prim(U,R,cv);
         
-        if plotadiabaticwall == false
+        if plotnormalized == false
 
             varsplot1(1,:,:) = rho;
             if plotschlieren == true
@@ -183,6 +184,7 @@ for iter = 1:nt
                 ', y = ' num2str(20*dy)]);
             xlabel('t'); ylabel('\rho');
             set(gca,'FontSize',14);
+       
         else
             
             varsplot2(1,:) = T(19,:)./Tinf;
@@ -191,9 +193,13 @@ for iter = 1:nt
             varsplot2(4,:) = p(19,:)./pinf;
             varsplot2(5,:) = p(38,:)./pinf;
             varsplot2(6,:) = p(56,:)./pinf;
-
+            
             % overall title
-            sgtitle(['Normalized MacCormack for Compressible NSE: t = ' num2str(t) ', n = ' num2str(iter)]);
+            if bc == "isothermal"
+                sgtitle(['Normalized NSE w/ Isothermal BC: t = ' num2str(t) ', n = ' num2str(iter)]);
+            elseif bc == "adiabatic"
+                sgtitle(['Normalized NSE w/ Adiabatic BC: t = ' num2str(t) ', n = ' num2str(iter)]);
+            end
 
             % pcolor
             for j = 1:size(varsplot2,1)
@@ -210,6 +216,9 @@ for iter = 1:nt
         drawnow;
     end
 end
+
+if plotMachAngle
+    machAngle(field, fieldname, xx, yy, dx, dy, M)
 
 
 %% end timer
