@@ -1,6 +1,6 @@
 function [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf,bc)
 %CORRECTOR Executes corrector step of MacCormack method.
-%   [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf)
+%   [U] = corrector(U,Ubar,Ebar,Fbar,R,cp,cv,Pr,dx,dy,dt,uinf,pinf,Tinf,bc)
 
     %% Setup
 

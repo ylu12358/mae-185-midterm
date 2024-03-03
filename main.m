@@ -33,11 +33,12 @@ nt = 1500;
 figureskipped = 50; % only plots iterations at increments of this value
 t = 0;
 
-%% Specify part two problem toggles
+%% specify part two problem toggles
 plotschlieren = false;
 plotnormalized = true;
 plotMachAngle = false;
 bc = "adiabatic";
+% bc = "isothermal";
 
 %% initialize grid
 [xx,yy] = ndgrid(linspace(0,L,nx),linspace(0,H,ny));
@@ -105,15 +106,13 @@ if plotnormalized == true
         'p/p_{inf}',...
         'p/p_{inf}'};
     
-    subtitles = {'Temperature T @ x/L = 0.25',...
-        'Temperature T @ x/L = 0.5',...
-        'Temperature T @ x/L = 0.75',...
-        'Pressure p @ x/L = 0.25',...
-        'Pressure p @ x/L = 0.5',...
-        'Pressure p @ x/L = 0.75'};
-    
+    subtitles = {'temperature @ x/L = 0.25',...
+        'temperature @ x/L = 0.5',...
+        'temperature @ x/L = 0.75',...
+        'pressure @ x/L = 0.25',...
+        'pressure @ x/L = 0.5',...
+        'pressure @ x/L = 0.75'};
 end
-
 
 if plotschlieren == true
     cblabels{1} = ' ';
@@ -152,7 +151,7 @@ for iter = 1:nt
             
         
             % overall title
-            sgtitle(['MacCormack for Compressible Navier-Stokes: t = ' num2str(t) ', n = ' num2str(iter)]);
+            sgtitle(['MacCormack for Compressible NSE: t = ' num2str(t) ', n = ' num2str(iter)]);
        
             % pcolor
             for j = 1:size(varsplot1,1)
@@ -204,7 +203,7 @@ for iter = 1:nt
             % pcolor
             for j = 1:size(varsplot2,1)
                 ax = subplot(2,3,j);
-                plot(yy(1,:),varsplot2(j,:));
+                plot(yy(1,:),varsplot2(j,:),'r-','LineWidth',2);
                 title(subtitles(j));
                 xlabel('y'); ylabel(cblabels(j));
                 set(gca,'FontSize',12);
@@ -212,10 +211,12 @@ for iter = 1:nt
             
         end 
         
-
         drawnow;
     end
 end
+
+filename = ['T' char(bc) '.mat'];
+save(filename,"T","xx");
 
 if plotMachAngle == true
     machAngle(p, 'pressure', xx, yy, dx, dy, M);

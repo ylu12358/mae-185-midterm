@@ -1,6 +1,6 @@
 function [u,v,p,T,rho] = enforceBC(u,v,p,T,rho,pinf,Tinf,uinf,R,bc)
 %enforceBC Enforces boundary conditions.
-%   [u,v,p,T,rho] = enforceBC(u,v,p,T,rho,pinf,Tinf,uinf,R)
+%   [u,v,p,T,rho] = enforceBC(u,v,p,T,rho,pinf,Tinf,uinf,R,bc)
     
     % Enforce BCs on primitive variables
 
