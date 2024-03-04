@@ -43,7 +43,7 @@ bc = "isothermal";
 %% initialize grid
 [xx,yy] = ndgrid(linspace(0,L,nx),linspace(0,H,ny));
 
-%% initialize primitive variables w/ ICs
+%% initialize primitive variables w/ IC
 % compute u_infinity
 a = sqrt(gamma*R*Tinf);
 uinf = M*a;
@@ -71,7 +71,7 @@ dx = diff(xx);
 dx = dx(1);
 dy = diff(yy');
 dy = dy(1);
-if bc == "adiabatic"
+if bc == "adiabatic" || plotnormalized == false;
     sf = 20;
 else
     sf = 2;
