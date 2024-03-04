@@ -12,9 +12,9 @@ function dfdx = ddx_bwd(f,dx,bc)
     dfdx        = zeros(nx,ny);
 
     % backward difference
-    for i=3:nx
+    for i=2:nx
         for j=1:ny
-            dfdx(i,j) = (3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx;
+            dfdx(i,j) = (f(i,j)-f(i-1,j))/dx;
         end
     end
 
@@ -29,16 +29,10 @@ function dfdx = ddx_bwd(f,dx,bc)
 
         otherwise
 
-            % central difference for second point
-            i = 2;
-            for j=1:ny
-                dfdx(i,j) = (f(i+1,j)-f(i-1,j))/2/dx;
-            end   
-
             % forward difference for first point
             i = 1;
             for j=1:ny
-                dfdx(i,j) = (-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx;
+                dfdx(i,j) = (f(i+1,j)-f(i,j))/dx;
             end      
     end
 end

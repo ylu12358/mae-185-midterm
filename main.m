@@ -24,7 +24,7 @@ Pr = 0.71;
 L = 10^(-5);
 H = 8*10^(-6);
 
-M = 4.5;
+M = 4;
 
 % simulation parameters
 nx = 75;
@@ -37,7 +37,7 @@ t = 0;
 plotschlieren = false;
 plotnormalized = false;
 plotMachAngle = false;
-%bc = "adiabatic";
+% bc = "adiabatic";
 bc = "isothermal";
 
 %% initialize grid
@@ -66,17 +66,16 @@ Ubar = zeros(4,nx,ny);
 %% compute initial physical parameters
 mu = sutherland(T);
 
-%% dx, dy, dt, safety factor sf
+%% dx, dy, dt
 dx = diff(xx);
 dx = dx(1);
 dy = diff(yy');
 dy = dy(1);
-if bc == "adiabatic" || plotnormalized == false;
-    sf = 20;
+if bc == "adiabatic" || plotnormalized == false
+    dt = 2.2*10^(-11);
 else
-    sf = 2;
+    dt = 2.35*10^(-11);
 end
-dt = 2.35*10^(-11)/sf;
 
 %% initialize conservative variables
 U = prim2cons(rho,u,v,T,cv);

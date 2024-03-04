@@ -13,8 +13,8 @@ function dfdy = ddy_bwd(f,dy,bc)
 
     % backward difference
     for i=1:nx
-        for j=3:ny
-            dfdy(i,j) = (3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy;
+        for j=2:ny
+            dfdy(i,j) = (f(i,j)-f(i,j-1))/dy;
         end
     end
 
@@ -29,16 +29,10 @@ function dfdy = ddy_bwd(f,dy,bc)
 
         otherwise
 
-            % central difference for second point
-            j = 2;
-            for i=1:nx
-                dfdy(i,j) = (f(i,j+1)-f(i,j-1))/2/dy;
-            end
-
             % forward difference for first point
             j = 1;
             for i=1:nx
-                dfdy(i,j) = (-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy;
+                dfdy(i,j) = (f(i,j+1)-f(i,j))/dy;
             end
     end
 end
