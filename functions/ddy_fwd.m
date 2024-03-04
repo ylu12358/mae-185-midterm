@@ -13,8 +13,8 @@ function dfdy = ddy_fwd(f,dy,bc)
 
     % forward difference
     for i=1:nx
-        for j=1:ny-1
-            dfdy(i,j) = (f(i,j+1)-f(i,j))/dy;
+        for j=1:ny-2
+            dfdy(i,j) = (-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy;
         end
     end
 
@@ -22,17 +22,23 @@ function dfdy = ddy_fwd(f,dy,bc)
         case 'periodic'
 
             % assuming periodicity (top boundary)
-            j = nx;
+            j = ny;
             for i=1:nx
                 dfdy(i,j) = (f(i,j)-f(i,ny))/dy;
             end
 
         otherwise
 
-            % backward difference for last point
-            j = nx;
+            % central difference for second to last point
+            j = ny-1;
             for i=1:nx
-                dfdy(i,j) = (f(i,j)-f(i,j-1))/dy;
+                dfdy(i,j) = (f(i,j+1)-f(i,j-1))/2/dy;
+            end
+
+            % backward difference for last point
+            j = ny;
+            for i=1:nx
+                dfdy(i,j) = (3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy;
             end
     end
 end

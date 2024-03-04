@@ -24,7 +24,7 @@ Pr = 0.71;
 L = 10^(-5);
 H = 8*10^(-6);
 
-M = 4;
+M = 4.5;
 
 % simulation parameters
 nx = 75;
@@ -35,10 +35,10 @@ t = 0;
 
 %% specify part two problem toggles
 plotschlieren = false;
-plotnormalized = true;
+plotnormalized = false;
 plotMachAngle = false;
-bc = "adiabatic";
-% bc = "isothermal";
+%bc = "adiabatic";
+bc = "isothermal";
 
 %% initialize grid
 [xx,yy] = ndgrid(linspace(0,L,nx),linspace(0,H,ny));
@@ -71,7 +71,11 @@ dx = diff(xx);
 dx = dx(1);
 dy = diff(yy');
 dy = dy(1);
-sf = 1.2;
+if bc == "adiabatic"
+    sf = 10;
+else
+    sf = 2;
+end
 dt = 2.35*10^(-11)/sf;
 
 %% initialize conservative variables

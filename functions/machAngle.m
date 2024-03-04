@@ -20,6 +20,7 @@ function theta = machAngle(field, fieldname, xx, yy, dx, dy, M)
     theta = atan((col_end-col_first)*dy/(dx*(nx-10)))*180/pi;
 
     % Verify slope of line found by plotting field
+    figure;
     pcolor(xx,yy,field);
     hold on;
     % Plot line using computed data
