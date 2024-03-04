@@ -72,7 +72,7 @@ dx = dx(1);
 dy = diff(yy');
 dy = dy(1);
 if bc == "adiabatic"
-    sf = 10;
+    sf = 20;
 else
     sf = 2;
 end
