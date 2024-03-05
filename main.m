@@ -71,7 +71,7 @@ dx = diff(xx);
 dx = dx(1);
 dy = diff(yy');
 dy = dy(1);
-if bc == "adiabatic" || plotnormalized == false
+if bc == "adiabatic"
     dt = 2.2*10^(-11);
 else
     dt = 2.35*10^(-11);
@@ -81,12 +81,15 @@ end
 U = prim2cons(rho,u,v,T,cv);
 
 %% initialize graph window and parameters
+% create figure and assign position and size
 f1 = figure(1);
 f1.Position = [100,100,1400,1000];
 
+% initialize plotting variables
 varsplot1 = zeros(6,nx,ny);
 varsplot2 = zeros(6,ny);
 
+% colorbar labels
 cblabels = {'\rho [kg/m^3]',...
     'u [m/s]',...
     'v [m/s]',...
@@ -94,6 +97,7 @@ cblabels = {'\rho [kg/m^3]',...
     'p [Pa = kg/m/s^2]',...
     'T [K]'};
 
+% subplot titles
 subtitles = {'density',...
     'velocity - x',...
     'velocity - y',...
@@ -101,6 +105,7 @@ subtitles = {'density',...
     'pressure',...
     'temperature'};
 
+% labels/titles for normalized plots
 if plotnormalized == true
     cblabels = {'T/T_{inf}',...
         'T/T_{inf}',...
@@ -117,11 +122,13 @@ if plotnormalized == true
         'pressure @ x/L = 0.75'};
 end
 
+% label/title for schlieren plot
 if plotschlieren == true
     cblabels{1} = ' ';
     subtitles{1} = 'schlieren';
 end
 
+% initialize convergence variable
 convergencevar = rho(40,20);
 convergencet = t;
 
@@ -141,7 +148,7 @@ for iter = 1:nt
         [rho,u,v,T,p,e,~] = cons2prim(U,R,cv);
         
         if plotnormalized == false
-
+            % assign conservative variables to plotting variable
             varsplot1(1,:,:) = rho;
             if plotschlieren == true
                 varsplot1(1,:,:) = schlieren(rho,dx,dy);
@@ -152,7 +159,6 @@ for iter = 1:nt
             varsplot1(5,:,:) = p;
             varsplot1(6,:,:) = T;
             
-        
             % overall title
             sgtitle(['MacCormack for Compressible NSE: t = ' num2str(t) ', n = ' num2str(iter)]);
        
@@ -188,7 +194,7 @@ for iter = 1:nt
             set(gca,'FontSize',14);
        
         else
-            
+            % assign normalized variables to plotting variable
             varsplot2(1,:) = T(19,:)./Tinf;
             varsplot2(2,:) = T(38,:)./Tinf;
             varsplot2(3,:) = T(56,:)./Tinf;
@@ -214,13 +220,16 @@ for iter = 1:nt
             
         end 
         
+        % update figure window
         drawnow;
     end
 end
 
+%% store data in .mat file for external calculations
 filename = ['T' char(bc) '.mat'];
 save(filename,"T","xx");
 
+%% generate mach angle plot
 if plotMachAngle == true
     machAngle(p, 'pressure', xx, yy, dx, dy, M);
 end
