@@ -10,7 +10,7 @@ tic
 addpath('functions')
 
 %% define physical and simulation parameters
-% air at standard conditions
+% air at standard conditions - assume calorically perfect ideal gas
 pinf = 101300;
 Tinf = 288.15;
 rho0 = 1.225;
@@ -20,13 +20,14 @@ cv = 718;
 gamma = cp/cv;
 Pr = 0.71;
 
-% physical parameters
+% physical parameters - length and width of mesh
 L = 10^(-5);
 H = 8*10^(-6);
 
+% specify mach number
 M = 4;
 
-% simulation parameters
+% simulation parameters - mesh grid spacing, number of time steps
 nx = 75;
 ny = 80;
 nt = 1500;
@@ -48,7 +49,7 @@ bc = "isothermal";
 a = sqrt(gamma*R*Tinf);
 uinf = M*a;
 
-% initialize variables
+% initialize variables - homogeneous flow field at t=0
 rho = rho0*ones(nx,ny);
 
 u = uinf*ones(nx,ny);
@@ -66,11 +67,13 @@ Ubar = zeros(4,nx,ny);
 %% compute initial physical parameters
 mu = sutherland(T);
 
-%% dx, dy, dt
+%% compute dx, dy, dt
 dx = diff(xx);
 dx = dx(1);
 dy = diff(yy');
 dy = dy(1);
+
+% change time step for adiabatic case
 if bc == "adiabatic"
     dt = 2.2*10^(-11);
 else
@@ -113,7 +116,7 @@ if plotnormalized == true
         'p/p_{inf}',...
         'p/p_{inf}',...
         'p/p_{inf}'};
-    
+    % create subtitles
     subtitles = {'temperature @ x/L = 0.25',...
         'temperature @ x/L = 0.5',...
         'temperature @ x/L = 0.75',...
@@ -162,7 +165,7 @@ for iter = 1:nt
             % overall title
             sgtitle(['MacCormack for Compressible NSE: t = ' num2str(t) ', n = ' num2str(iter)]);
        
-            % pcolor
+            % pcolor - plot individual subtitles for primitive variables
             for j = 1:size(varsplot1,1)
                 ax = subplot(3,3,j);
                 pcolor(xx,yy,squeeze(varsplot1(j,:,:)));
@@ -181,7 +184,7 @@ for iter = 1:nt
                 set(gca,'FontSize',12);
             end
         
-            % convergence
+            % convergence - plot the convergence for density
             convergencevar = [convergencevar rho(40,20)];
             convergencet = [convergencet  t];
             subplot(3,3,[7 8 9]);
@@ -194,7 +197,7 @@ for iter = 1:nt
             set(gca,'FontSize',14);
        
         else
-            % assign normalized variables to plotting variable
+            % PART TWO: assign normalized variables to plotting variable
             varsplot2(1,:) = T(19,:)./Tinf;
             varsplot2(2,:) = T(38,:)./Tinf;
             varsplot2(3,:) = T(56,:)./Tinf;
@@ -202,14 +205,14 @@ for iter = 1:nt
             varsplot2(5,:) = p(38,:)./pinf;
             varsplot2(6,:) = p(56,:)./pinf;
             
-            % overall title
+            % PART TWO: overall title
             if bc == "isothermal"
                 sgtitle(['Normalized NSE w/ Isothermal BC: t = ' num2str(t) ', n = ' num2str(iter)]);
             elseif bc == "adiabatic"
                 sgtitle(['Normalized NSE w/ Adiabatic BC: t = ' num2str(t) ', n = ' num2str(iter)]);
             end
 
-            % pcolor
+            % PART TWO: pcolor
             for j = 1:size(varsplot2,1)
                 ax = subplot(2,3,j);
                 plot(yy(1,:),varsplot2(j,:),'r-','LineWidth',2);
