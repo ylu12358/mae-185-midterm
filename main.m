@@ -1,3 +1,8 @@
+%% MAE 185 Midterm Project - Yuanyuang Lu, Tarun Murugesan, Benjamin Tarver
+% Purpose: to numerically approximate the solution to the compressible
+% Navier-Stokes equation over a flat plate in an air flow field with Mach
+% number four using the MacCormack Method.
+
 %% clean slate
 clc;
 clear all;
